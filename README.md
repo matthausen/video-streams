@@ -15,14 +15,20 @@ There is a postman collection in this repository.
 The AWS lambda functions are available at the following endpoints:
   Create a new user
   `POST - https://qmm869at0l.execute-api.eu-west-2.amazonaws.com/dev/users`
-  ```{"userId": "<userName>"} ```
+  
+  ```
+  {"userId": "<userName>"} 
+  ```
   
   Add a new stream to a user (the streamId is a unique value generated with uuid())
   `POST - https://qmm869at0l.execute-api.eu-west-2.amazonaws.com/dev/user/{userId}/streams`
 
   Delete a stream from a specific user
   `DELETE - https://qmm869at0l.execute-api.eu-west-2.amazonaws.com/dev/user/{userId}/stream`
-  ```{closingStream: "<streamuuid>"}```
+  
+  ```
+  {closingStream: "<streamuuid>"}
+  ```
 
 I already created a user called "johndoe" which can be used for testing.
 
