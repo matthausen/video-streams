@@ -71,10 +71,22 @@
         }
       }
     },
-    "AppLogGroup": {
+    "NewUserLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/video-streams-dev-app"
+        "LogGroupName": "/aws/lambda/video-streams-dev-newUser"
+      }
+    },
+    "NewStreamLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/video-streams-dev-newStream"
+      }
+    },
+    "DeleteStreamLogGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/lambda/video-streams-dev-deleteStream"
       }
     },
     "IamRoleLambdaExecution": {
@@ -173,18 +185,18 @@
         }
       }
     },
-    "AppLambdaFunction": {
+    "NewUserLambdaFunction": {
       "Type": "AWS::Lambda::Function",
       "Properties": {
         "Code": {
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/video-streams/dev/1618663538571-2021-04-17T12:45:38.571Z/video-streams.zip"
+          "S3Key": "serverless/video-streams/dev/1618677911102-2021-04-17T16:45:11.102Z/video-streams.zip"
         },
-        "Handler": "index.handler",
+        "Handler": "newUser.newUser",
         "Runtime": "nodejs12.x",
-        "FunctionName": "video-streams-dev-app",
+        "FunctionName": "video-streams-dev-newUser",
         "MemorySize": 1024,
         "Timeout": 6,
         "Environment": {
@@ -200,17 +212,97 @@
         }
       },
       "DependsOn": [
-        "AppLogGroup"
+        "NewUserLogGroup"
       ]
     },
-    "AppLambdaVersion5Bwjr5nU745Z8kG2WSKszr8hfiKQlzffcraonEl90": {
+    "NewStreamLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/video-streams/dev/1618677911102-2021-04-17T16:45:11.102Z/video-streams.zip"
+        },
+        "Handler": "newStream.newStream",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "video-streams-dev-newStream",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USERS_STREAMS_TABLE": "users-streams-dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "NewStreamLogGroup"
+      ]
+    },
+    "DeleteStreamLambdaFunction": {
+      "Type": "AWS::Lambda::Function",
+      "Properties": {
+        "Code": {
+          "S3Bucket": {
+            "Ref": "ServerlessDeploymentBucket"
+          },
+          "S3Key": "serverless/video-streams/dev/1618677911102-2021-04-17T16:45:11.102Z/video-streams.zip"
+        },
+        "Handler": "deleteStream.deleteStream",
+        "Runtime": "nodejs12.x",
+        "FunctionName": "video-streams-dev-deleteStream",
+        "MemorySize": 1024,
+        "Timeout": 6,
+        "Environment": {
+          "Variables": {
+            "USERS_STREAMS_TABLE": "users-streams-dev"
+          }
+        },
+        "Role": {
+          "Fn::GetAtt": [
+            "IamRoleLambdaExecution",
+            "Arn"
+          ]
+        }
+      },
+      "DependsOn": [
+        "DeleteStreamLogGroup"
+      ]
+    },
+    "NewUserLambdaVersionJpWBbSVAFpOLc4R5BNL09MDm24FlikHrgI2D0IKkkI": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
-          "Ref": "AppLambdaFunction"
+          "Ref": "NewUserLambdaFunction"
         },
-        "CodeSha256": "OK1BMUP/fZpjyfn3PCa9CFUGibRgF3b7yJr/heK9eT0="
+        "CodeSha256": "Fk57lx8t/pzYwMORgrl3PpOtEbzc0a4syLnwiV87hWA="
+      }
+    },
+    "NewStreamLambdaVersionyFqCZ283dPaWRwMOwGBHPLE6vVQySeYyvB7kwEqVBM": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "NewStreamLambdaFunction"
+        },
+        "CodeSha256": "Fk57lx8t/pzYwMORgrl3PpOtEbzc0a4syLnwiV87hWA="
+      }
+    },
+    "DeleteStreamLambdaVersion1pC1G73cc8r4DgMSJR6HxPd6o5iGBHvFN4VAc8QnQU": {
+      "Type": "AWS::Lambda::Version",
+      "DeletionPolicy": "Retain",
+      "Properties": {
+        "FunctionName": {
+          "Ref": "DeleteStreamLambdaFunction"
+        },
+        "CodeSha256": "Fk57lx8t/pzYwMORgrl3PpOtEbzc0a4syLnwiV87hWA="
       }
     },
     "ApiGatewayRestApi": {
@@ -225,7 +317,7 @@
         "Policy": ""
       }
     },
-    "ApiGatewayResourceProxyVar": {
+    "ApiGatewayResourceUsers": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
@@ -234,65 +326,70 @@
             "RootResourceId"
           ]
         },
-        "PathPart": "{proxy+}",
+        "PathPart": "users",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayMethodAny": {
-      "Type": "AWS::ApiGateway::Method",
+    "ApiGatewayResourceUser": {
+      "Type": "AWS::ApiGateway::Resource",
       "Properties": {
-        "HttpMethod": "ANY",
-        "RequestParameters": {},
-        "ResourceId": {
+        "ParentId": {
           "Fn::GetAtt": [
             "ApiGatewayRestApi",
             "RootResourceId"
           ]
         },
+        "PathPart": "user",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:",
-                {
-                  "Ref": "AWS::Partition"
-                },
-                ":apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
+        }
       }
     },
-    "ApiGatewayMethodProxyVarAny": {
+    "ApiGatewayResourceUserUseridVar": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceUser"
+        },
+        "PathPart": "{userId}",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceUserUseridVarStreams": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceUserUseridVar"
+        },
+        "PathPart": "streams",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayResourceUserUseridVarStream": {
+      "Type": "AWS::ApiGateway::Resource",
+      "Properties": {
+        "ParentId": {
+          "Ref": "ApiGatewayResourceUserUseridVar"
+        },
+        "PathPart": "stream",
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        }
+      }
+    },
+    "ApiGatewayMethodUsersPost": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "HttpMethod": "ANY",
+        "HttpMethod": "POST",
         "RequestParameters": {},
         "ResourceId": {
-          "Ref": "ApiGatewayResourceProxyVar"
+          "Ref": "ApiGatewayResourceUsers"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -317,7 +414,7 @@
                 ":lambda:path/2015-03-31/functions/",
                 {
                   "Fn::GetAtt": [
-                    "AppLambdaFunction",
+                    "NewUserLambdaFunction",
                     "Arn"
                   ]
                 },
@@ -329,7 +426,93 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1618663526515": {
+    "ApiGatewayMethodUserUseridVarStreamsPost": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "POST",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserUseridVarStreams"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "NewStreamLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayMethodUserUseridVarStreamDelete": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "DELETE",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceUserUseridVarStream"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:",
+                {
+                  "Ref": "AWS::Partition"
+                },
+                ":apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "DeleteStreamLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayDeployment1618677899455": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -338,16 +521,91 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodAny",
-        "ApiGatewayMethodProxyVarAny"
+        "ApiGatewayMethodUsersPost",
+        "ApiGatewayMethodUserUseridVarStreamsPost",
+        "ApiGatewayMethodUserUseridVarStreamDelete"
       ]
     },
-    "AppLambdaPermissionApiGateway": {
+    "NewUserLambdaPermissionApiGateway": {
       "Type": "AWS::Lambda::Permission",
       "Properties": {
         "FunctionName": {
           "Fn::GetAtt": [
-            "AppLambdaFunction",
+            "NewUserLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "NewStreamLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "NewStreamLambdaFunction",
+            "Arn"
+          ]
+        },
+        "Action": "lambda:InvokeFunction",
+        "Principal": "apigateway.amazonaws.com",
+        "SourceArn": {
+          "Fn::Join": [
+            "",
+            [
+              "arn:",
+              {
+                "Ref": "AWS::Partition"
+              },
+              ":execute-api:",
+              {
+                "Ref": "AWS::Region"
+              },
+              ":",
+              {
+                "Ref": "AWS::AccountId"
+              },
+              ":",
+              {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "/*/*"
+            ]
+          ]
+        }
+      }
+    },
+    "DeleteStreamLambdaPermissionApiGateway": {
+      "Type": "AWS::Lambda::Permission",
+      "Properties": {
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "DeleteStreamLambdaFunction",
             "Arn"
           ]
         },
@@ -408,10 +666,22 @@
         "Ref": "ServerlessDeploymentBucket"
       }
     },
-    "AppLambdaFunctionQualifiedArn": {
+    "NewUserLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersion5Bwjr5nU745Z8kG2WSKszr8hfiKQlzffcraonEl90"
+        "Ref": "NewUserLambdaVersionJpWBbSVAFpOLc4R5BNL09MDm24FlikHrgI2D0IKkkI"
+      }
+    },
+    "NewStreamLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "NewStreamLambdaVersionyFqCZ283dPaWRwMOwGBHPLE6vVQySeYyvB7kwEqVBM"
+      }
+    },
+    "DeleteStreamLambdaFunctionQualifiedArn": {
+      "Description": "Current Lambda function version",
+      "Value": {
+        "Ref": "DeleteStreamLambdaVersion1pC1G73cc8r4DgMSJR6HxPd6o5iGBHvFN4VAc8QnQU"
       }
     },
     "ServiceEndpoint": {

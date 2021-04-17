@@ -23,11 +23,24 @@ provider:
     USERS_STREAMS_TABLE: ${self:custom.tableName}
 
 functions:
-  app:
-    handler: index.handler
+  newUser:
+    handler: newUser.newUser
     events:
-      - http: ANY /
-      - http: 'ANY {proxy+}'
+      - http:
+          path: /users
+          method: post
+  newStream:
+    handler: newStream.newStream
+    events:
+      - http:
+          path: /user/{userId}/streams
+          method: post
+  deleteStream:
+    handler: deleteStream.deleteStream
+    events:
+      - http:
+          path: /user/{userId}/stream/
+          method: delete
 
 resources: 
   Resources:
