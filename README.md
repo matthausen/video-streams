@@ -1,6 +1,4 @@
-1. POST request to add a stream id to a specific user
-2. Check if stream is already 
-
+AWS lambda is available at: https://bjkr7j73r6.execute-api.eu-west-2.amazonaws.com/dev
 
 
  There is a benefit to this—I don't have to manually string up all my routes and functions. I can also limit the impact of cold-starts on lightly-used routes.

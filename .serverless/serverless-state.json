@@ -201,7 +201,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/video-streams/dev/1618655367662-2021-04-17T10:29:27.662Z/video-streams.zip"
+                "S3Key": "serverless/video-streams/dev/1618663538571-2021-04-17T12:45:38.571Z/video-streams.zip"
               },
               "Handler": "index.handler",
               "Runtime": "nodejs12.x",
@@ -224,14 +224,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersiongjJCWCSlIwz7sjJK9JTTAHzay4GlLNsrlrwRNjiheTw": {
+          "AppLambdaVersion5Bwjr5nU745Z8kG2WSKszr8hfiKQlzffcraonEl90": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "i1esSaRFLOfVCVwtksHG3u0LMiyZBdNeunpA3Q5UVQc="
+              "CodeSha256": "OK1BMUP/fZpjyfn3PCa9CFUGibRgF3b7yJr/heK9eT0="
             }
           },
           "ApiGatewayRestApi": {
@@ -350,7 +350,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1618655357270": {
+          "ApiGatewayDeployment1618663526515": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -432,7 +432,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersiongjJCWCSlIwz7sjJK9JTTAHzay4GlLNsrlrwRNjiheTw"
+              "Ref": "AppLambdaVersion5Bwjr5nU745Z8kG2WSKszr8hfiKQlzffcraonEl90"
             }
           },
           "ServiceEndpoint": {
@@ -568,7 +568,7 @@
         "timeout": 6,
         "runtime": "nodejs12.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersiongjJCWCSlIwz7sjJK9JTTAHzay4GlLNsrlrwRNjiheTw"
+        "versionLogicalId": "AppLambdaVersion5Bwjr5nU745Z8kG2WSKszr8hfiKQlzffcraonEl90"
       }
     },
     "resources": {
@@ -625,7 +625,7 @@
     "artifact": "/Users/matteofusilli/Apps/video_streams/.serverless/video-streams.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/video-streams/dev/1618655367662-2021-04-17T10:29:27.662Z",
+    "artifactDirectoryName": "serverless/video-streams/dev/1618663538571-2021-04-17T12:45:38.571Z",
     "artifact": "video-streams.zip"
   }
 }
