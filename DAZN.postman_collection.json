@@ -1,0 +1,100 @@
+{
+	"info": {
+		"_postman_id": "8adedc77-3aa3-416b-9792-724528271861",
+		"name": "DAZN",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "New Stream",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "https://qmm869at0l.execute-api.eu-west-2.amazonaws.com/dev/user/johndoe/streams",
+					"protocol": "https",
+					"host": [
+						"qmm869at0l",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"user",
+						"johndoe",
+						"streams"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "New User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\": \"testUser\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://bjkr7j73r6.execute-api.eu-west-2.amazonaws.com/dev/users",
+					"protocol": "https",
+					"host": [
+						"bjkr7j73r6",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Stream",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"closingStream\": \"b22435c1-8717-411c-8937-e14954bce588\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://qmm869at0l.execute-api.eu-west-2.amazonaws.com/dev/user/johndoe/stream",
+					"protocol": "https",
+					"host": [
+						"qmm869at0l",
+						"execute-api",
+						"eu-west-2",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"dev",
+						"user",
+						"johndoe",
+						"stream"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
